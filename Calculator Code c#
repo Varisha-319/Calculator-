@@ -1,0 +1,116 @@
+using System;
+
+namespace ScientificCalculator
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool keepRunning = true;
+
+            Console.WriteLine("========================================");
+            Console.WriteLine("      C# Scientific Calculator");
+            Console.WriteLine("========================================");
+
+            while (keepRunning)
+            {
+                // 1. Display Menu
+                Console.WriteLine("\nSelect an operation:");
+                Console.WriteLine("1. Addition (+)");
+                Console.WriteLine("2. Subtraction (-)");
+                Console.WriteLine("3. Multiplication (*)");
+                Console.WriteLine("4. Division (/)");
+                Console.WriteLine("5. Power (x^y)");
+                Console.WriteLine("6. Square Root (sqrt)");
+                Console.WriteLine("7. Sine (sin)");
+                Console.WriteLine("8. Cosine (cos)");
+                Console.WriteLine("9. Tangent (tan)");
+                Console.WriteLine("0. Exit");
+
+                Console.Write("\nEnter choice (0-9): ");
+                string choice = Console.ReadLine();
+
+                try
+                {
+                    // Exit check
+                    if (choice == "0")
+                    {
+                        keepRunning = false;
+                        continue;
+                    }
+
+                    double result = 0;
+
+                    // 2. Handle Operations requiring 2 numbers
+                    if (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5")
+                    {
+                        Console.Write("Enter first number: ");
+                        double num1 = Convert.ToDouble(Console.ReadLine());
+                        Console.Write("Enter second number: ");
+                        double num2 = Convert.ToDouble(Console.ReadLine());
+
+                        switch (choice)
+                        {
+                            case "1": result = num1 + num2; break;
+                            case "2": result = num1 - num2; break;
+                            case "3": result = num1 * num2; break;
+                            case "4":
+                                if (num2 == 0) throw new DivideByZeroException();
+                                result = num1 / num2;
+                                break;
+                            case "5": result = Math.Pow(num1, num2); break; // x to the power of y
+                        }
+                    }
+                    // 3. Handle Operations requiring 1 number
+                    else if (choice == "6" || choice == "7" || choice == "8" || choice == "9")
+                    {
+                        Console.Write("Enter number (or angle in degrees): ");
+                        double num = Convert.ToDouble(Console.ReadLine());
+
+                        switch (choice)
+                        {
+                            case "6":
+                                if (num < 0)
+                                {
+                                    Console.WriteLine("Error: Cannot calculate square root of a negative number.");
+                                    continue;
+                                }
+                                result = Math.Sqrt(num);
+                                break;
+                            case "7":
+                                // Convert Degrees to Radians for Math.Sin
+                                result = Math.Sin((Math.PI / 180) * num);
+                                break;
+                            case "8":
+                                result = Math.Cos((Math.PI / 180) * num);
+                                break;
+                            case "9":
+                                result = Math.Tan((Math.PI / 180) * num);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid selection. Please try again.");
+                        continue;
+                    }
+
+                    // 4. Output
+                    Console.WriteLine($"\nResult: {result}");
+                }
+                catch (DivideByZeroException)
+                {
+                    Console.WriteLine("Error: Cannot divide by zero.");
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Error: Invalid number format.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+            }
+        }
+    }
+}
